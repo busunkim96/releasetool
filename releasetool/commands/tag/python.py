@@ -129,14 +129,11 @@ def tag(ctx: TagContext = None) -> TagContext:
     determine_release_tag(ctx)
     determine_package_name_and_version(ctx)
 
-    # If the release already exists, don't do anything
     if releasetool.commands.common.release_exists(ctx):
         click.secho(f"{ctx.release_tag} already exists.", fg="magenta")
-        return ctx
-
-    get_release_notes(ctx)
-
-    create_release(ctx)
+    else:
+        get_release_notes(ctx)
+        create_release(ctx)
 
     ctx.kokoro_job_name = (
         f"cloud-devrel/client-libraries/google-cloud-python/release/{ctx.package_name}"

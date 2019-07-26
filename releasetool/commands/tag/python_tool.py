@@ -78,14 +78,11 @@ def tag(ctx: TagContext = None) -> TagContext:
     python.determine_release_tag(ctx)
     python.determine_package_name_and_version(ctx)
 
-    # If the release already exists, don't do anything
     if releasetool.commands.common.release_exists(ctx):
         click.secho(f"{ctx.release_tag} already exists.", fg="magenta")
-        return ctx
-
-    get_release_notes(ctx)
-
-    create_release(ctx)
+    else:
+        get_release_notes(ctx)
+        create_release(ctx)
 
     ctx.kokoro_job_name = f"cloud-devrel/client-libraries/{ctx.package_name}/release"
     releasetool.commands.common.publish_via_kokoro(ctx)
